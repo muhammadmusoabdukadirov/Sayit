@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anor Gilam Yuvish — Demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #d62828;
+            --secondary: #003049;
+            --accent: #f77f00;
+            --light: #fcbf49;
+            --dark: #2d2d2d;
+            --light-bg: #f8f9fa;
+            --white: #ffffff;
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: var(--light-bg);
+            color: var(--dark);
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Left Side - Main Content */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        /* Right Side - Admin Panel */
+        .admin-panel {
+            width: 320px;
+            background: var(--white);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            padding: 25px 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            position: relative;
+            color: white;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+        
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        header .logo {
+            font-size: 34px;
+            color: var(--light);
+        }
+        
+        header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        /* Section Styles */
+        .section {
+            background: var(--white);
+            margin: 0 auto 25px;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+        
+        .section h2 {
+            color: var(--secondary);
+            margin-bottom: 18px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 10px;
+        }
+        
+        .section h2 i {
+            color: var(--primary);
+        }
+        
+        /* Online Camera Styles */
+        .camera-container {
+            position: relative;
+            width: 100%;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #000;
+            margin-bottom: 15px;
+        }
+        
+        .camera-placeholder {
+            width: 100%;
+            height: 350px;
+            background: linear-gradient(45deg, #222, #444);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+        
+        .camera-placeholder i {
+            font-size: 60px;
+            margin-bottom: 15px;
+            color: var(--light);
+        }
+        
+        .camera-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .camera-controls button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .camera-controls button:hover {
+            background: var(--secondary);
+        }
+        
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 18px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(214, 40, 40, 0.2);
+        }
+        
+        .date-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .date-option {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .date-option:hover {
+            border-color: var(--primary);
+        }
+        
+        .date-option.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .date-option.discount {
+            border-color: var(--accent);
+        }
+        
+        .date-option.high-price {
+            border-color: #ff4d4d;
+        }
+        
+        .date-option.busy {
+            opacity: 0.6;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+        
+        /* Button Styles */
+        .btn {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        .btn-block {
+            width: 100%;
+        }
+        
+        /* Price Box Styles */
+        .price-box {
+            padding: 18px;
+            background: var(--light-bg);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .price-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .price-info {
+            flex: 1;
+        }
+        
+        .price-info h3 {
+            font-size: 18px;
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+        
+        .price-info p {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .price {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .price.discount {
+            color: var(--accent);
+        }
+        
+        /* Admin Panel Styles */
+        .admin-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light);
+        }
+        
+        .admin-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 26px;
+        }
+        
+        .admin-info h3 {
+            color: var(--secondary);
+        }
+        
+        .admin-info p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .admin-menu {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+        
+        .admin-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .admin-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            color: var(--dark);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .admin-menu a:hover, .admin-menu a.active {
+            background: var(--light-bg);
+            color: var(--primary);
+        }
+        
+        .admin-menu a i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .stats {
+            background: var(--secondary);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .stats h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .stat-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .stat-value {
+            font-weight: 700;
+        }
+        
+        .admin-controls {
+            margin-top: auto;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 992px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .admin-panel {
+                width: 100%;
+                order: -1;
+                margin-bottom: 20px;
+            }
+            
+            .admin-controls {
+                margin-top: 25px;
+            }
+        }
+        
+        /* Status Indicators */
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .status-available {
+            background: rgba(76, 175, 80, 0.15);
+            color: #4CAF50;
+        }
+        
+        .status-discount {
+            background: rgba(255, 152, 0, 0.15);
+            color: #FF9800;
+        }
+        
+        .status-high-price {
+            background: rgba(244, 67, 54, 0.15);
+            color: #F44336;
+        }
+        
+        /* Success Message */
+        .success-message {
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Left Side - Main Content -->
+    <div class="main-content">
+        <header>
+            <h1><i class="fas fa-rug logo"></i> ANOR GILAM YUVISH</h1>
+            <p>Yuksak sifat va ishonch - 10 yildan ortiq tajriba</p>
+        </header>
+        
+        <!-- 1-BO‘LIM: ONLINE KAMERA -->
+        <div class="section">
+            <h2><i class="fas fa-video"></i> Online Kamera - Jonli Ko'rish</h2>
+            <p>Gilam yuvish jarayonini jonli ko‘rish imkoniyati:</p>
+            
+            <div class="camera-container">
+                <div class="camera-placeholder">
+                    <i class="fas fa-camera"></i>
+                    <p>ONLINE KAMERA - DEMO MODE</p>
+                    <p>Hozir gilam yuvish jarayoni davom etmoqda</p>
+                </div>
+            </div>
+            
+            <div class="camera-controls">
+                <button><i class="fas fa-expand"></i> Katta ko'rinish</button>
+                <button><i class="fas fa-volume-up"></i> Ovozni yoqish</button>
+                <button><i class="fas fa-sync-alt"></i> Yangilash</button>
+            </div>
+            
+            <p><small>*Bu demo rejim. Haqiqiy loyihada kameraning haqiqiy ko'rsatkichi ishlaydi.</small></p>
+        </div>
+        
+        <!-- 2-BO‘LIM: BUYURTMA BERISH -->
+        <div class="section">
+            <h2><i class="fas fa-calendar-check"></i> Buyurtma Berish</h2>
+            <p>Gilamingizni yuvdirish uchun quyidagi formani to'ldiring:</p>
+            
+            <div class="form-group">
+                <label for="name">Ismingiz</label>
+                <input type="text" id="name" placeholder="Ismingizni kiriting">
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Telefon raqamingiz</label>
+                <input type="text" id="phone" placeholder="+998 (XX) XXX-XX-XX">
+            </div>
+            
+            <div class="form-group">
+                <label for="address">Manzil</label>
+                <input type="text" id="address" placeholder="Manzilingizni kiriting">
+            </div>
+            
+            <div class="form-group">
+                <label for="carpet-type">Gilam turi</label>
+                <select id="carpet-type">
+                    <option value="">Gilam turini tanlang</option>
+                    <option value="yun">Yun gilam</option>
+                    <option value="sintetik">Sintetik gilam</option>
+                    <option value="qo'lda">Qo'lda to'qilgan</option>
+                    <option value="shaggy">Shaggy gilam</option>
+                    <option value="jilid">Gilam jildlari</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Sanani tanlang</label>
+                <div class="date-selector">
+                    <div class="date-option discount selected">
+                        <div>24 Fev</div>
+                        <div>Chorshanba</div>
+                        <div class="status status-discount">Aksiya</div>
+                    </div>
+                    <div class="date-option">
+                        <div>25 Fev</div>
+                        <div>Payshanba</div>
+                        <div class="status status-available">Bo'sh</div>
+                    </div>
+                    <div class="date-option high-price">
+                        <div>26 Fev</div>
+                        <div>Juma</div>
+                        <div class="status status-high-price">Yuqori narx</div>
+                    </div>
+                    <div class="date-option busy">
+                        <div>27 Fev</div>
+                        <div>Shanba</div>
+                        <div class="status">Band</div>
+                    </div>
+                    <div class="date-option">
+                        <div>28 Fev</div>
+                        <div>Yakshanba</div>
+                        <div class="status status-available">Bo'sh</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="comment">Qo'shimcha izoh (ixtiyoriy)</label>
+                <textarea id="comment" rows="3" placeholder="Qo'shimcha malumotlar..."></textarea>
+            </div>
+            
+            <button class="btn btn-primary btn-block" id="submit-order">
+                <i class="fas fa-paper-plane"></i> Buyurtma yuborish
+            </button>
+            
+            <div class="success-message" id="success-message">
+                <i class="fas fa-check-circle"></i> Buyurtmangiz qabul qilindi! Tez orada siz bilan bog'lanamiz.
+            </div>
+        </div>
+        
+        <!-- 3-BO‘LIM: XIZMATLAR VA NARXLAR -->
+        <div class="section">
+            <h2><i class="fas fa-tags"></i> Xizmatlar va Narxlar</h2>
+            <p>Gilam turlari bo'yicha narxlar (m² uchun):</p>
+            
+            <div class="price-box">
+                <div class="price-info">
+                    <h3>Yun gilam</h3>
+                    <p>Tabiiy yundan tayyorlangan gilamlar</p>
+                </div>
+                <div class="price">12 000 so'm</div>
+            </div>
+            
+            <div class="price-box">
+                <div class="price-info">
+                    <h3>Sintetik gilam</h3>
+                    <p>Zamonaviy materiallardan tayyorlangan</p>
+                </div>
+                <div class="price">8 000 so'm</div>
+            </div>
+            
+            <div class="price-box">
+                <div class="price-info">
+                    <h3>Qo'lda to'qilgan gilam</h3>
+                    <p>O'zbekistonning an'anaviy gilamlari</p>
+                </div>
+                <div class="price discount">18 000 so'm</div>
+            </div>
+            
+            <div class="price-box">
+                <div class="price-info">
+                    <h3>Shaggy gilam</h3>
+                    <p>Uzun tukli zamonaviy gilamlar</p>
+                </div>
+                <div class="price">10 000 so'm</div>
+            </div>
+            
+            <p><small>*Bu demo narxlar. Ma'mur paneli orqali o'zgartiriladi.</small></p>
+        </div>
+    </div>
+    
+    <!-- Right Side - Admin Panel -->
+    <div class="admin-panel">
+        <div class="admin-header">
+            <div class="admin-avatar">
+                <i class="fas fa-user-cog"></i>
+            </div>
+            <div class="admin-info">
+                <h3>Anor Admin</h3>
+                <p>Ma'mur paneli</p>
+            </div>
+        </div>
+        
+        <ul class="admin-menu">
+            <li><a href="#" class="active"><i class="fas fa-tachometer-alt"></i> Boshqaruv paneli</a></li>
+            <li><a href="#"><i class="fas fa-calendar-alt"></i> Kun tartibi</a></li>
+            <li><a href="#"><i class="fas fa-money-bill-wave"></i> Narxlarni boshqarish</a></li>
+            <li><a href="#"><i class="fas fa-video"></i> Kamera sozlamalari</a></li>
+            <li><a href="#"><i class="fas fa-users"></i> Mijozlar</a></li>
+            <li><a href="#"><i class="fas fa-chart-bar"></i> Hisobotlar</a></li>
+            <li><a href="#"><i class="fas fa-cog"></i> Sozlamalar</a></li>
+        </ul>
+        
+        <div class="stats">
+            <h3><i class="fas fa-chart-line"></i> Bugun statistikasi</h3>
+            <div class="stat-item">
+                <span>Yangi buyurtmalar:</span>
+                <span class="stat-value">5</span>
+            </div>
+            <div class="stat-item">
+                <span>Jarayondagilar:</span>
+                <span class="stat-value">3</span>
+            </div>
+            <div class="stat-item">
+                <span>Tugatilgan ishlar:</span>
+                <span class="stat-value">7</span>
+            </div>
+        </div>
+        
+        <div class="admin-controls">
+            <button class="btn btn-primary btn-block">
+                <i class="fas fa-plus-circle"></i> Yangi xodim qo'shish
+            </button>
+            <button class="btn btn-block" style="background: #eee; margin-top: 10px;">
+                <i class="fas fa-sign-out-alt"></i> Chiqish
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Date selection functionality
+        document.querySelectorAll('.date-option').forEach(option => {
+            option.addEventListener('click', function() {
+                if (!this.classList.contains('busy')) {
+                    document.querySelectorAll('.date-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                }
+            });
+        });
+        
+        // Order form submission
+        document.getElementById('submit-order').addEventListener('click', function() {
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const address = document.getElementById('address').value;
+            
+            if (name && phone && address) {
+                document.getElementById('success-message').style.display = 'block';
+                
+                // Reset form
+                document.getElementById('name').value = '';
+                document.getElementById('phone').value = '';
+                document.getElementById('address').value = '';
+                document.getElementById('carpet-type').selectedIndex = 0;
+                document.getElementById('comment').value = '';
+                
+                // Hide success message after 5 seconds
+                setTimeout(() => {
+                    document.getElementById('success-message').style.display = 'none';
+                }, 5000);
+            } else {
+                alert('Iltimos, barcha kerakli maydonlarni to\'ldiring!');
+            }
+        });
+        
+        // Camera controls simulation
+        document.querySelectorAll('.camera-controls button').forEach(button => {
+            button.addEventListener('click', function() {
+                const action = this.textContent.trim();
+                alert(`"${action}" funksiyasi demo rejimda ishlamaydi. Haqiqiy loyihada ishlaydi.`);
+            });
+        });
+    </script>
+</body>
+</html>
