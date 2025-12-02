@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>Gilamlarni boshqarish</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <h1>Gilamlar bo‘limi (Admin)</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <label>Gilam nomi:</label>
+        <input type="text" name="name" required>
+        <label>Ta'rif:</label>
+        <input type="text" name="description">
+        <label>Narxi (so'm):</label>
+        <input type="number" name="price" required>
+        <button type="submit">Qo'shish</button>
+    </form>
+
+    <h2>Mavjud gilamlar:</h2>
+    <ul>
+        {% for carpet in carpets %}
+            <li>{{ carpet.name }} — {{ carpet.price }} so'm</li>
+        {% empty %}
+            <li>Hozircha gilam qo‘shilmagan</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

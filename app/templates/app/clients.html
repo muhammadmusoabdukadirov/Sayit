@@ -1,30 +1,207 @@
-<h2>Mijozlar ro‘yxati</h2>
+{% load static %}
+{% load humanize %}
 
-<table border="1" cellpadding="10">
-    <tr>
-        <th>ID</th>
-        <th>Ism</th>
-        <th>Telefon</th>
-        <th>Manzil</th>
-        <th>Gilam turi</th>
-        <th>Sana</th>
-        <th>Izoh</th>
-    </tr>
-    {% for order in orders %}
-    <tr>
-        <td>{{ order.id }}</td>
-        <td>{{ order.name }}</td>
-        <td>{{ order.phone }}</td>
-        <td>{{ order.address }}</td>
-        <td>
-            {% if order.carpet_type %}
-                {{ order.carpet_type.name }}
-            {% else %}
-                {{ order.other_carpet_name }}
-            {% endif %}
-        </td>
-        <td>{{ order.date }}</td>
-        <td>{{ order.comment }}</td>
-    </tr>
-    {% endfor %}
-</table>
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mijozlar Ro'yxati - Anor Gilam Yuvish</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{% static 'css/cilents.css' %}">
+
+</head>
+<body>
+    <div class="container">
+        <!-- Sarlavha -->
+        <div class="header animate-fade">
+            <h1><i class="fas fa-users"></i> Mijozlar Ro'yxati</h1>
+            <p>Barcha buyurtmalar va mijoz ma'lumotlari</p>
+        </div>
+
+        <!-- Statistik kartochkalar -->
+        <div class="stats-cards">
+            <div class="stat-card total animate-fade" style="animation-delay: 0.1s;">
+                <i class="fas fa-users"></i>
+                <div class="stat-info">
+                    <h3>Jami Mijozlar</h3>
+                    <div class="number">{{ orders|length }}</div>
+                    <div class="change up">
+                        <i class="fas fa-arrow-up"></i>
+                        12% o'tgan oyga nisbatan
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Boshqaruv elementlari -->
+        <div class="controls animate-fade" style="animation-delay: 0.5s;">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Mijoz qidirish...">
+            </div>
+
+            <div class="filter-btn" id="filterNew">
+                <i class="fas fa-star"></i> Yangilar
+            </div>
+
+            <div class="filter-btn active" id="filterAll">
+                <i class="fas fa-list"></i> Hammasi
+            </div>
+
+            <div class="filter-btn" id="filterToday">
+                <i class="fas fa-calendar-day"></i> Bugun
+            </div>
+
+            <div class="export-buttons">
+                <div class="export-btn export-pdf" id="exportPDF">
+                    <i class="fas fa-file-pdf"></i> PDF
+                </div>
+                <div class="export-btn export-excel" id="exportExcel">
+                    <i class="fas fa-file-excel"></i> Excel
+                </div>
+            </div>
+
+            <button class="action-btn" id="refreshBtn">
+                <i class="fas fa-sync-alt"></i> Yangilash
+            </button>
+        </div>
+
+        <!-- Jadval -->
+        <div class="table-container animate-fade" style="animation-delay: 0.6s;">
+            <table id="clientsTable">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)">
+                            ID <i class="fas fa-sort"></i>
+                        </th>
+                        <th onclick="sortTable(1)">
+                            Ism <i class="fas fa-sort"></i>
+                        </th>
+                        <th onclick="sortTable(2)">
+                            Telefon <i class="fas fa-sort"></i>
+                        </th>
+                        <th onclick="sortTable(3)">
+                            Manzil <i class="fas fa-sort"></i>
+                        </th>
+                        <th onclick="sortTable(4)">
+                            Gilam Turi <i class="fas fa-sort"></i>
+                        </th>
+                        <th onclick="sortTable(5)">
+                            Sana <i class="fas fa-sort"></i>
+                        </th>
+                        <th onclick="sortTable(6)">
+                            Holat <i class="fas fa-sort"></i>
+                        </th>
+                        <th>Amallar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td><strong>#{{ order.id }}</strong></td>
+                        <td>
+                            <div class="client-name">
+                                <strong>{{ order.name }}</strong>
+                                {% if order.is_new %}
+                                <span class="status-badge status-new animate-pulse">
+                                    <i class="fas fa-star"></i> Yangi
+                                </span>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td class="phone-cell">
+                            <i class="fas fa-phone"></i> {{ order.phone }}
+                        </td>
+                        <td>
+                            <i class="fas fa-map-marker-alt"></i> {{ order.address|truncatechars:30 }}
+                        </td>
+                        <td>
+                            {% if order.carpet_type %}
+                                <span class="carpet-type">
+                                    <i class="fas fa-rug"></i> {{ order.carpet_type.name }}
+                                </span>
+                            {% else %}
+                                <span class="carpet-type">
+                                    <i class="fas fa-question-circle"></i> {{ order.other_carpet_name|default:"Noma'lum" }}
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="date-cell">
+                                <i class="fas fa-calendar"></i> {{ order.date }}
+                                {% if order.is_today %}
+                                <span class="status-badge status-processing">
+                                    <i class="fas fa-bolt"></i> Bugun
+                                </span>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            {% if order.status == 'new' %}
+                            <span class="status-badge status-new">
+                                <i class="fas fa-clock"></i> Yangi
+                            </span>
+                            {% elif order.status == 'processing' %}
+                            <span class="status-badge status-processing">
+                                <i class="fas fa-cog fa-spin"></i> Jarayonda
+                            </span>
+                            {% elif order.status == 'completed' %}
+                            <span class="status-badge status-completed">
+                                <i class="fas fa-check"></i> Tugatilgan
+                            </span>
+                            {% else %}
+                            <span class="status-badge status-pending">
+                                <i class="fas fa-clock"></i> Kutilmoqda
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td class="actions-cell">
+                            <div class="action-icon view" onclick="viewClient({{ order.id }})" title="Ko'rish">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="action-icon edit" onclick="editClient({{ order.id }})" title="Tahrirlash">
+                                <i class="fas fa-edit"></i>
+                            </div>
+                            <div class="action-icon delete" onclick="deleteClient({{ order.id }})" title="O'chirish">
+                                <i class="fas fa-trash"></i>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 40px;">
+                            <i class="fas fa-inbox" style="font-size: 48px; color: #ddd; margin-bottom: 20px;"></i>
+                            <h3 style="color: #666; margin-bottom: 10px;">Hozircha mijozlar mavjud emas</h3>
+                            <p style="color: #999;">Birinchi buyurtma qilingach, bu yerda ko'rasiz</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Sahifalash -->
+        <div class="pagination animate-fade" style="animation-delay: 0.7s;">
+            <div class="page-btn disabled">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="page-btn active">1</div>
+            <div class="page-btn">2</div>
+            <div class="page-btn">3</div>
+            <div class="page-btn">4</div>
+            <div class="page-btn">5</div>
+            <div class="page-btn">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>

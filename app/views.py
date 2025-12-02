@@ -27,6 +27,7 @@ def index(request):
 
     return response
 
+# ---------------------------------------------------------------------
 
 def create_order(request):
     if request.method == "POST":
@@ -56,3 +57,28 @@ def create_order(request):
 def clients(request):
     orders = Order.objects.all().order_by('-id')
     return render(request, 'app/clients.html', {'orders': orders})
+
+
+# ---------------------------------------------------------------------
+def sozlamalar(request):
+    orders = Order.objects.all().order_by('-id')
+    return render(request, 'app/sozlamalar.html', {'orders': orders})
+
+# ---------------------------------------------------------------------
+
+def manage_carpets(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        description = request.POST.get("description")
+        price = request.POST.get("price")
+
+        if name and price:
+            CarpetType.objects.create(
+                name=name,
+                description=description,
+                price=price
+            )
+        return redirect('manage_carpets')
+
+    carpets = CarpetType.objects.all().order_by('-id')
+    return render(request, 'app/manage_carpets.html', {'carpets': carpets})
