@@ -1,3 +1,4 @@
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="uz">
@@ -475,81 +476,49 @@
         </div>
         
         <!-- 2-BO‘LIM: BUYURTMA BERISH -->
-        <div class="section">
-            <h2><i class="fas fa-calendar-check"></i> Buyurtma Berish</h2>
-            <p>Gilamingizni yuvdirish uchun quyidagi formani to'ldiring:</p>
-            
+        <form method="POST" action="{% url 'create_order' %}">
+            {% csrf_token %}
             <div class="form-group">
                 <label for="name">Ismingiz</label>
-                <input type="text" id="name" placeholder="Ismingizni kiriting">
+                <input type="text" name="name" id="name" placeholder="Ismingizni kiriting" required>
             </div>
-            
+
             <div class="form-group">
-                <label for="phone">Telefon raqamingiz</label>
-                <input type="text" id="phone" placeholder="+998 (XX) XXX-XX-XX">
+                <label for="phone">Telefon raqam</label>
+                <input type="text" name="phone" id="phone" placeholder="+998 (XX) XXX-XX-XX" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="address">Manzil</label>
-                <input type="text" id="address" placeholder="Manzilingizni kiriting">
+                <input type="text" name="address" id="address" placeholder="Manzilingizni kiriting" required>
             </div>
-            
+
             <div class="form-group">
-                <label for="carpet-type">Gilam turi</label>
-                <select id="carpet-type">
-                    <option value="">Gilam turini tanlang</option>
-                    <option value="yun">Yun gilam</option>
-                    <option value="sintetik">Sintetik gilam</option>
-                    <option value="qo'lda">Qo'lda to'qilgan</option>
-                    <option value="shaggy">Shaggy gilam</option>
-                    <option value="jilid">Gilam jildlari</option>
+                <label for="carpet_type">Gilam turi</label>
+                <select name="carpet_type" id="carpet_type">
+                    {% for carpet in carpets %}
+                        <option value="{{ carpet.id }}">{{ carpet.name }}</option>
+                    {% endfor %}
                 </select>
             </div>
-            
+
             <div class="form-group">
-                <label>Sanani tanlang</label>
-                <div class="date-selector">
-                    <div class="date-option discount selected">
-                        <div>24 Fev</div>
-                        <div>Chorshanba</div>
-                        <div class="status status-discount">Aksiya</div>
-                    </div>
-                    <div class="date-option">
-                        <div>25 Fev</div>
-                        <div>Payshanba</div>
-                        <div class="status status-available">Bo'sh</div>
-                    </div>
-                    <div class="date-option high-price">
-                        <div>26 Fev</div>
-                        <div>Juma</div>
-                        <div class="status status-high-price">Yuqori narx</div>
-                    </div>
-                    <div class="date-option busy">
-                        <div>27 Fev</div>
-                        <div>Shanba</div>
-                        <div class="status">Band</div>
-                    </div>
-                    <div class="date-option">
-                        <div>28 Fev</div>
-                        <div>Yakshanba</div>
-                        <div class="status status-available">Bo'sh</div>
-                    </div>
-                </div>
+                <label for="other_carpet_name">Boshqa gilam nomi (ixtiyoriy)</label>
+                <input type="text" name="other_carpet_name" id="other_carpet_name" placeholder="Agar ro'yxatda yo'q bo'lsa">
             </div>
-            
+
             <div class="form-group">
-                <label for="comment">Qo'shimcha izoh (ixtiyoriy)</label>
-                <textarea id="comment" rows="3" placeholder="Qo'shimcha malumotlar..."></textarea>
+                <label for="date">Buyurtma kuni</label>
+                <input type="date" name="date" id="date" required>
             </div>
-            
-            <button class="btn btn-primary btn-block" id="submit-order">
-                <i class="fas fa-paper-plane"></i> Buyurtma yuborish
-            </button>
-            
-            <div class="success-message" id="success-message">
-                <i class="fas fa-check-circle"></i> Buyurtmangiz qabul qilindi! Tez orada siz bilan bog'lanamiz.
+
+            <div class="form-group">
+                <label for="comment">Izoh (ixtiyoriy)</label>
+                <textarea name="comment" id="comment" rows="3"></textarea>
             </div>
-        </div>
+
+            <button type="submit" class="btn btn-primary">Buyurtma yuborish</button>
+        </form>
         
         <!-- 3-BO‘LIM: XIZMATLAR VA NARXLAR -->
         <div class="section">
