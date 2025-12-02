@@ -26,6 +26,8 @@ def index(request):
         response.set_cookie('visited', 'yes', max_age=365*24*60*60)
 
     return response
+
+
 def create_order(request):
     if request.method == "POST":
         name = request.POST.get("name")
@@ -52,5 +54,5 @@ def create_order(request):
 
 
 def clients(request):
-    orders = Order.objects.all().order_by('-id') 
-    return render(request, 'clients.html', {'orders': orders})
+    orders = Order.objects.all().order_by('-id')
+    return render(request, 'app/clients.html', {'orders': orders})

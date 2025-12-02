@@ -1,0 +1,30 @@
+<h2>Mijozlar ro‘yxati</h2>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>ID</th>
+        <th>Ism</th>
+        <th>Telefon</th>
+        <th>Manzil</th>
+        <th>Gilam turi</th>
+        <th>Sana</th>
+        <th>Izoh</th>
+    </tr>
+    {% for order in orders %}
+    <tr>
+        <td>{{ order.id }}</td>
+        <td>{{ order.name }}</td>
+        <td>{{ order.phone }}</td>
+        <td>{{ order.address }}</td>
+        <td>
+            {% if order.carpet_type %}
+                {{ order.carpet_type.name }}
+            {% else %}
+                {{ order.other_carpet_name }}
+            {% endif %}
+        </td>
+        <td>{{ order.date }}</td>
+        <td>{{ order.comment }}</td>
+    </tr>
+    {% endfor %}
+</table>
