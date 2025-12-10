@@ -552,3 +552,71 @@
             text-align: center;
             display: none;
         }
+
+/* Status buttonlari umumiy styling */
+.status-form {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.status-form button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #fff;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Ranglar va gradientlar */
+.status-form button[value="new"] {
+    background: linear-gradient(45deg, #2196f3, #21cbf3);
+}
+
+.status-form button[value="processing"] {
+    background: linear-gradient(45deg, #ff9800, #ffc107);
+    color: #212529;
+}
+
+.status-form button[value="completed"] {
+    background: linear-gradient(45deg, #4caf50, #66bb6a);
+}
+
+/* Hover effekti */
+.status-form button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    opacity: 0.95;
+}
+
+/* Ikonalar */
+.status-form .icon {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* Kichik ekranlar uchun */
+@media (max-width: 600px) {
+    .status-form {
+        gap: 4px;
+    }
+
+    .status-form button {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    .status-form .icon {
+        font-size: 14px;
+    }
+}

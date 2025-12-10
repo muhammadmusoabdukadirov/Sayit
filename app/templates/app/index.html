@@ -9,150 +9,205 @@
     <title>Anor Gilam Yuvish — Demo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/stayls.css' %}">
+    <link rel="stylesheet" href="{% static 'css/panel.css'%}">
+    <link rel="stylesheet" href="{% static 'css/rasm.css'%}">
+    <link rel="stylesheet" href="{% static 'css/message.css'%}">
     <style>
-       
+
     </style>
 </head>
 
 <!-- Faqat BIRTA <body> tegi bo'lishi kerak -->
 <body class="{% if request.user.is_authenticated and request.user.profile.dark_mode %}dark-mode{% endif %}">
-    <!-- Left Side - Main Content -->
-    <div class="main-content">
-        <header>
-            <div class="theme-indicator" id="themeIndicator">
-                <span id="themeText">🌞</span>
+{% if messages %}
+    <div id="messages-container">
+        {% for message in messages %}
+            <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                {{ message }}
             </div>
-            <h1><i class="fas fa-rug logo"></i> ANOR GILAM YUVISH</h1>
-            <p>Yuksak sifat va ishonch - 10 yildan ortiq tajriba</p>
-        </header>
-        
-        <!-- 1-BO‘LIM: ONLINE KAMERA -->
-        <div class="section">
-            <h2><i class="fas fa-video"></i> Online Kamera - Jonli Ko'rish</h2>
-            <p>Gilam yuvish jarayonini jonli ko'rish imkoniyati:</p>
-            
-            <div class="camera-container">
-                <div class="camera-placeholder">
-                    <i class="fas fa-camera"></i>
-                    <p>ONLINE KAMERA - DEMO MODE</p>
-                    <p>Hozir gilam yuvish jarayoni davom etmoqda</p>
-                </div>
-            </div>
-            
-            <div class="camera-controls">
-                <button><i class="fas fa-expand"></i> Katta ko'rinish</button>
-                <button><i class="fas fa-volume-up"></i> Ovozni yoqish</button>
-                <button><i class="fas fa-sync-alt"></i> Yangilash</button>
-            </div>
-            
-            <p><small>*Bu demo rejim. Haqiqiy loyihada kameraning haqiqiy ko'rsatkichi ishlaydi.</small></p>
-        </div>
-        
-        <!-- 2-BO‘LIM: BUYURTMA BERISH -->
-        <div class="section">
-            <form method="POST" action="{% url 'create_order' %}">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="name">Ismingiz</label>
-                    <input type="text" name="name" id="name" placeholder="Ismingizni kiriting" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="phone">Telefon raqam</label>
-                    <input type="text" name="phone" id="phone" placeholder="+998 (XX) XXX-XX-XX" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="address">Manzil</label>
-                    <input type="text" name="address" id="address" placeholder="Manzilingizni kiriting" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="carpet_type">Gilam turi</label>
-                    <select name="carpet_type" id="carpet_type">
-                        {% for carpet in carpets %}
-                            <option value="{{ carpet.id }}">{{ carpet.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="other_carpet_name">Boshqa gilam nomi (ixtiyoriy)</label>
-                    <input type="text" name="other_carpet_name" id="other_carpet_name" placeholder="Agar ro'yxatda yo'q bo'lsa">
-                </div>
-
-                <div class="form-group">
-                    <label for="date">Buyurtma kuni</label>
-                    <input type="date" name="date" id="date" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="comment">Izoh (ixtiyoriy)</label>
-                    <textarea name="comment" id="comment" rows="3"></textarea>
-                </div>
-
-                <button type="submit" class="btn btn-primary btn-block">
-                    <i class="fas fa-paper-plane"></i> Buyurtma yuborish
-                </button>
-            </form>
-        </div>
-        
-        <!-- 3-BO‘LIM: XIZMATLAR VA NARXLAR -->
-        <div class="section">
-            <h2><i class="fas fa-tags"></i> Xizmatlar va Narxlar</h2>
-            <p>Gilam turlari bo'yicha narxlar (m² uchun):</p>
-
-            {% for carpet in carpets %}
-            <div class="price-box">
-                <div class="price-info">
-                    <h3>{{ carpet.name }}</h3>
-                    <p>{{ carpet.description }}</p>
-                </div>
-                <div class="price">{{ carpet.price|intcomma }} so'm</div>
-            </div>
-            {% endfor %}
-
-            <p><small>*Bu narxlar ma'mur panelidan o'zgartiriladi.</small></p>
-        </div>
+        {% endfor %}
     </div>
-    
-    <!-- Right Side - Admin Panel -->
-    <div class="admin-panel">
-        <div class="admin-header">
-            <div class="admin-avatar">
-                <i class="fas fa-user-cog"></i>
-            </div>
-            <div class="admin-info">
-                <h3>Anor Admin</h3>
-                <p>Ma'mur paneli</p>
+
+    <script>
+        setTimeout(() => {
+            const messages = document.querySelectorAll('#messages-container .message');
+            messages.forEach(msg => msg.remove());
+        }, 5000);  // 5 soniyadan keyin xabar yo'qoladi
+    </script>
+{% endif %}
+<!-- Left Side - Main Content -->
+<div class="main-content">
+    <header>
+        <div class="theme-indicator" id="themeIndicator">
+            <span id="themeText">🌞</span>
+        </div>
+        <h1><i class="fas fa-rug logo"></i> ANOR GILAM YUVISH</h1>
+        <p>Yuksak sifat va ishonch - 10 yildan ortiq tajriba</p>
+    </header>
+
+    <!-- 1-BO‘LIM: ONLINE KAMERA -->
+    <div class="section">
+        <h2><i class="fas fa-video"></i> Online Kamera - Jonli Ko'rish</h2>
+        <p>Gilam yuvish jarayonini jonli ko'rish imkoniyati:</p>
+
+        <div class="camera-container">
+            <div class="camera-placeholder">
+                <i class="fas fa-camera"></i>
+                <p>ONLINE KAMERA - DEMO MODE</p>
+                <p>Hozir gilam yuvish jarayoni davom etmoqda</p>
             </div>
         </div>
-        
-        <ul class="admin-menu">
-            <li><a href="#" class="active"><i class="fas fa-tachometer-alt"></i> Boshqaruv paneli</a></li>
-            {% if request.user.is_staff %}
-                <li><a href="{% url 'manage_carpets' %}"><i class="fas fa-tags"></i> Gilamlar</a></li>
-                <li><a href="{% url 'clients' %}"><i class="fas fa-users"></i> Mijozlar</a></li>
+
+        <div class="camera-controls">
+            <button><i class="fas fa-expand"></i> Katta ko'rinish</button>
+            <button><i class="fas fa-volume-up"></i> Ovozni yoqish</button>
+            <button><i class="fas fa-sync-alt"></i> Yangilash</button>
+        </div>
+
+    </div>
+
+    <!-- 2-BO‘LIM: BUYURTMA BERISH -->
+    <div class="section">
+        <form method="POST" action="{% url 'create_order' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="name">Ismingiz</label>
+                <input type="text" name="name" id="name" placeholder="Ismingizni kiriting" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Telefon raqam</label>
+                <input type="text" name="phone" id="phone" placeholder="+998 (XX) XXX-XX-XX" required>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Manzil</label>
+                <input type="text" name="address" id="address" placeholder="Manzilingizni kiriting" required>
+            </div>
+
+            <div class="form-group">
+                <label for="carpet_type">Gilam turi</label>
+                <select name="carpet_type" id="carpet_type">
+                    {% for carpet in carpets %}
+                    <option value="{{ carpet.id }}">{{ carpet.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="other_carpet_name">Boshqa gilam nomi (ixtiyoriy)</label>
+                <input type="text" name="other_carpet_name" id="other_carpet_name"
+                       placeholder="Agar ro'yxatda yo'q bo'lsa">
+            </div>
+
+            <div class="form-group">
+                <label for="date">Buyurtma kuni</label>
+                <input type="date" name="date" id="date" required>
+            </div>
+
+            <div class="form-group">
+                <label for="comment">Izoh (ixtiyoriy)</label>
+                <textarea name="comment" id="comment" rows="3"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">
+                <i class="fas fa-paper-plane"></i> Buyurtma yuborish
+            </button>
+        </form>
+    </div>
+
+    <!-- 3-BO‘LIM: XIZMATLAR VA NARXLAR -->
+    <div class="section">
+        <h2><i class="fas fa-tags"></i> Xizmatlar va Narxlar</h2>
+        <p>Gilam turlari bo'yicha narxlar (m² uchun):</p>
+
+        {% for carpet in carpets %}
+        <div class="price-box">
+            <div class="price-info">
+                <h3>{{ carpet.name }}</h3>
+                <p>{{ carpet.description }}</p>
+            </div>
+            <div class="price">{{ carpet.price_per_m2 }} so'm</div>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+<!-- Right Side - Admin Panel -->
+<div class="admin-panel">
+    <div class="admin-header">
+        <div class="admin-avatar">
+    {% if request.user.is_authenticated and request.user.profile.avatar %}
+        <img src="{{ request.user.profile.avatar.url }}" alt="Profil rasmi">
+    {% else %}
+        <img src="data:image/png;base64,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" alt="Default avatar">
+    {% endif %}
+</div>
+        <div class="admin-info">
+            {% if request.user.is_authenticated %}
+            <h3>{{ request.user.username }}</h3>
+            {% if request.user.is_superuser %}
+            <p>Admin paneli</p>
+            {% elif request.user.is_staff %}
+            <p>Xodim</p>
+            {% else %}
+            <p>Mijoz</p>
             {% endif %}
-            <li><a href="{% url 'sozlamalar' %}"><i class="fas fa-cog"></i> Sozlamalar</a></li>
-        </ul>
-        
-        <div class="stats">
-            <h3><i class="fas fa-chart-line"></i> Bugun statistikasi</h3>
-            <div class="stat-item">
-                <span>Yangi buyurtmalar:</span>
-                <span class="stat-value">5</span>
-            </div>
-            <div class="stat-item">
-                <span>Jarayondagilar:</span>
-                <span class="stat-value">3</span>
-            </div>
-            <div class="stat-item">
-                <span>Tugatilgan ishlar:</span>
-                <span class="stat-value">7</span>
-            </div>
+            {% else %}
+            <h3>Mehmon</h3>
+            <p>
+                Iltimos,
+                <a href="{% url 'boshqaruv' %}?tab=register" class="btn-link">Rohatdan o‘ting</a>
+                yoki
+                <a href="{% url 'boshqaruv' %}?tab=login" class="btn-link">Kirish</a>
+            </p>
+            {% endif %}
         </div>
+
     </div>
+
+    <ul class="admin-menu">
+        </li>
+        <li><a href="{% url 'profile' %}"><i class="fas fa-user"></i> Profil</a></li>
+
+
+        {% if request.user.is_superuser %}
+        <li><a href="{% url 'sozlamalar' %}" class="active"><i class="fas fa-tachometer-alt"></i> Boshqaruv paneli</a>
+
+        <li><a href="{% url 'clients' %}"><i class="fas fa-users"></i> Mijozlar</a></li>
+        {% endif %}
+        <li><a href="{% url 'boshqaruv' %}"><i class="fas fa-cog"></i> Sozlamalar</a></li>
+    </ul>
+<div class="stats">
+    <h3><i class="fas fa-chart-line"></i> Bugun statistikasi</h3>
+
+    <div class="stat-item">
+        <span>Bugun jami kirishlar:</span>
+        <span class="stat-value">{{ stats.today_visits }}</span>
+    </div>
+    <div class="stat-item">
+        <span>Mehmonlar:</span>
+        <span class="stat-value">{{ stats.guests_today }}</span>
+    </div>
+    <div class="stat-item">
+        <span>Foydalanuvchilar:</span>
+        <span class="stat-value">{{ stats.users_today }}</span>
+    </div>
+    <div class="stat-item">
+        <span>Yangi buyurtmalar:</span>
+        <span class="stat-value">{{ stats.new_orders }}</span>
+    </div>
+    <div class="stat-item">
+        <span>Jarayondagilar:</span>
+        <span class="stat-value">{{ stats.processing_orders }}</span>
+    </div>
+    <div class="stat-item">
+        <span>Tugatilgan ishlar:</span>
+        <span class="stat-value">{{ stats.completed_orders }}</span>
+    </div>
+</div>
+
 
     <!-- Theme Toggle Button -->
     <button class="theme-toggle" id="themeToggle">

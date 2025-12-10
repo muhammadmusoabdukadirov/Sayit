@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
 
 
@@ -15,17 +16,34 @@ class CarpetType(models.Model):
     def __str__(self):
         return self.name
 
+phone_validator = RegexValidator(
+    regex=r'^\+998\d{9}$',  # +998 bilan boshlanib, 9 ta raqam
+    message="Telefon raqam quyidagi formatda bo'lishi kerak: +998901234567"
+)
 
 # Buyurtmalar modeli
 class Order(models.Model):
+    STATUS_CHOICES = [
+        ('new', 'Yangi'),
+        ('processing', 'Jarayonda'),
+        ('completed', 'Tugatilgan'),
+    ]
+
     name = models.CharField(max_length=100, verbose_name="Ism familiya")
-    phone = models.CharField(max_length=20, verbose_name="Telefon raqam")
+    phone = models.CharField(max_length=20, validators=[phone_validator], verbose_name="Telefon raqam")
     address = models.CharField(max_length=255, verbose_name="Manzil")
-    carpet_type = models.ForeignKey(CarpetType, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Gilam turi")
-    other_carpet_name = models.CharField( max_length=100, blank=True, verbose_name="Boshqa gilam nomi",
-            help_text="Agar ro`yxatda bo`lmasa, o`zingiz gilam nomini kiriting")
+    carpet_type = models.ForeignKey(
+        CarpetType, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Gilam turi"
+    )
+    other_carpet_name = models.CharField(
+        max_length=100, blank=True, verbose_name="Boshqa gilam nomi",
+        help_text="Agar ro`yxatda bo`lmasa, o`zingiz gilam nomini kiriting"
+    )
     date = models.DateField(verbose_name="Buyurtma kuni")
-    comment = models.TextField( blank=True, verbose_name="Izoh")
+    comment = models.TextField(blank=True, verbose_name="Izoh")
+    status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES, default='new', verbose_name="Holat"
+    )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Yaratilgan vaqt")
 
     class Meta:
@@ -36,30 +54,31 @@ class Order(models.Model):
         return f"{self.name} — {self.phone}"
 
 
-class VisitorCount(models.Model):
-    date = models.DateField(auto_now_add=True, verbose_name="Sana")
-    count = models.IntegerField(default=1, verbose_name="Kirishlar soni")
 
-    class Meta:
-        verbose_name = "Saytga kirishlar"
-        verbose_name_plural = "Saytga kirishlar statistikasi"
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.date} — {self.count} ta kirish"
+        return self.user.username
 
 
-class Review(models.Model):
-    name = models.CharField(max_length=100, verbose_name="Foydalanuvchi ismi")
-    message = models.TextField(verbose_name="Izoh matni")
-    rating = models.IntegerField(
-        choices=[(i, f"{i} Yulduz") for i in range(1, 5+1)],
-        verbose_name="Reyting"
-    )
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Yozilgan sana")
+class VisitLog(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    session_key = models.CharField(max_length=255)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    user_agent = models.TextField(null=True, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    path = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
-        verbose_name = "Izoh"
-        verbose_name_plural = "Izohlar"
+        ordering = ['-timestamp']
+        indexes = [
+            models.Index(fields=['user', 'timestamp']),
+            models.Index(fields=['timestamp']),
+            models.Index(fields=['session_key']),
+        ]
 
     def __str__(self):
-        return f"{self.name} — {self.rating} ⭐"
+        return f"{self.user.username if self.user else 'Guest'} - {self.timestamp}"

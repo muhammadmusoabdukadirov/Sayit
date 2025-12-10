@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100, verbose_name='Foydalanuvchi ismi')),
-                ('message', models.TextField(verbose_name='Izoh matni')),
+                ('message.css', models.TextField(verbose_name='Izoh matni')),
                 ('rating', models.IntegerField(choices=[(1, '1 Yulduz'), (2, '2 Yulduz'), (3, '3 Yulduz'), (4, '4 Yulduz'), (5, '5 Yulduz')], verbose_name='Reyting')),
                 ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Yozilgan sana')),
             ],

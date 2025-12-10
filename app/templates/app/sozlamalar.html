@@ -152,7 +152,7 @@
 
     <!-- Qo'shish Button -->
     {% if user.is_superuser %}
-    <button class="accordion-btn">Qo'shish Gilam</button>
+    <button class="accordion-btn"> Gilam Qo'shish</button>
     <div class="accordion-content">
         <form method="post">
             {% csrf_token %}
@@ -162,7 +162,7 @@
     </div>
 
     <!-- Yangilash Button -->
-    <button class="accordion-btn">Yangilash Gilam</button>
+    <button class="accordion-btn">Gilam Yangilash </button>
     <div class="accordion-content">
         <form method="post">
             {% csrf_token %}
@@ -182,7 +182,7 @@
     </div>
 
  <!-- O'chirish Button (container ichida, Qo'shish va Yangilash bilan bir qatorda) -->
-<button class="accordion-btn delete">O'chirish Gilam</button>
+<button class="accordion-btn delete"> Gilam O'chirish</button>
 <div class="accordion-content">
     <form method="post">
         {% csrf_token %}
