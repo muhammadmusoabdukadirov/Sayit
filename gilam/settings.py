@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 
+ALLOWED_HOSTS = ["anorgilam.uz", "www.anorgilam.uz"]
+
 # settings.py
 TELEGRAM_BOT_TOKEN = "8418199748:AAFzDL_D4B-vz5s_hFBq-lndm14IpW4Souc"
 TELEGRAM_CHAT_ID = "7681665423"  # sening ID
